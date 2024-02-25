@@ -13,6 +13,6 @@ func NewHealthController() *HealthController {
 	return &HealthController{}
 }
 
-func (h *HealthController) registerRoutes(router *http.ServeMux) {
+func (h *HealthController) RegisterRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /health", health.HealthCheck)
 }

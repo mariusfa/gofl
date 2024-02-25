@@ -11,7 +11,7 @@ func TestHealthCheck(t *testing.T) {
 
 	router := http.NewServeMux()
 
-	healthController.registerRoutes(router)
+	healthController.RegisterRoutes(router)
 
 	req, err := http.NewRequest("GET", "/health", nil)
 	if err != nil {
