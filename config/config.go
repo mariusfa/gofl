@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"log"
 
 	"github.com/spf13/viper"
 )
@@ -11,20 +10,23 @@ type Config struct {
 	Port int
 }
 
-func GetConfig() (*Config, error) {
+type LoggerInterface interface {
+	Info(string)
+}
+
+func GetConfig(logger LoggerInterface) (*Config, error) {
 	defaultViper := viper.New()
 
 	defaultViper.SetConfigName("application")
 	defaultViper.SetConfigType("yaml")
 	defaultViper.AddConfigPath(".")
 
-
 	defaultViper.AutomaticEnv()
 	defaultViper.SetEnvPrefix("")
 
 	if err := defaultViper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			log.Println("No config file found. Using env vars only.")
+			logger.Info("Config file not found; using defaults")
 		} else {
 			return nil, err
 		}

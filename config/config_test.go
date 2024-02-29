@@ -2,8 +2,13 @@ package config
 
 import "testing"
 
+type loggerFake struct{}
+
+func (l *loggerFake) Info(string) {}
+
 func TestGetConfig(t *testing.T) {
-	config, err := GetConfig()
+	fake := &loggerFake{}
+	config, err := GetConfig(fake)
 	if err != nil {
 		t.Fatal(err)
 	}
