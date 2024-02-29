@@ -11,6 +11,7 @@ type AppLogger struct {
 }
 
 func NewAppLogger(appName string) *AppLogger {
+	log.SetFlags(0)
 	return &AppLogger{appName: appName}
 }
 
@@ -30,8 +31,8 @@ type appLog struct {
 	Timestamp string `json:"timestamp"`
 	LogLevel  string `json:"log_level"`
 	LogType   string `json:"log_type"`
-	Payload   string `json:"payload"`
 	AppName   string `json:"app_name"`
+	Payload   string `json:"payload"`
 }
 
 func newAppLog(logLevel string, logType string, payload string, appName string) *appLog {
