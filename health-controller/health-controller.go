@@ -3,7 +3,7 @@ package healthcontroller
 import (
 	"net/http"
 
-	"github.com/mariusfa/gofl/health"
+	"github.com/mariusfa/gofl/v2/health"
 )
 
 type HealthController struct {
