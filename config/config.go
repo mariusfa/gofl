@@ -2,53 +2,45 @@ package config
 
 import (
 	"errors"
+	"os"
 
-	"github.com/spf13/viper"
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	Port int
+	Port    string
+	AppName string
 }
 
 type LoggerInterface interface {
 	Info(string)
 }
 
-func GetConfig(logger LoggerInterface) (*Config, error) {
-	defaultViper := viper.New()
-
-	defaultViper.SetConfigName("application")
-	defaultViper.SetConfigType("yaml")
-	defaultViper.AddConfigPath(".")
-
-	defaultViper.AutomaticEnv()
-	defaultViper.SetEnvPrefix("")
-
-	if err := defaultViper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			logger.Info("Config file not found; using defaults")
-		} else {
-			return nil, err
-		}
+func GetConfig(logger LoggerInterface, filename string) (*Config, error) {
+	err := godotenv.Load(filename)
+	if err != nil {
+		logger.Info("Could not load .env file. Using ENV variables")
 	}
 
-	var config Config
-	err := defaultViper.Unmarshal(&config)
+	config := &Config{
+		Port: os.Getenv("PORT"),
+		AppName: os.Getenv("APP_NAME"),
+	}
+
+	err = validateConfig(config)
 	if err != nil {
 		return nil, err
 	}
 
-	err = validateConfig(&config)
-	if err != nil {
-		return nil, err
-	}
-
-	return &config, nil
+	return config, nil
 }
 
 func validateConfig(config *Config) error {
-	if config.Port == 0 {
-		return errors.New("port is required")
+	if config.Port == "" {
+		return errors.New("env var PORT is required")
+	}
+	if config.AppName == "" {
+		return errors.New("env var APP_NAME is required")
 	}
 
 	return nil
