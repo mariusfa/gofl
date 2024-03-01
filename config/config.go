@@ -23,7 +23,7 @@ func GetConfig(logger LoggerInterface, filename string) (*Config, error) {
 	}
 
 	config := &Config{
-		Port: os.Getenv("PORT"),
+		Port:    os.Getenv("PORT"),
 		AppName: os.Getenv("APP_NAME"),
 	}
 
