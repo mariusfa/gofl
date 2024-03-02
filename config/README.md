@@ -12,3 +12,5 @@ if err != nil {
 	panic(err)
 }
 ```
+
+An example of the logger impl you can find in the logging package app-log.
