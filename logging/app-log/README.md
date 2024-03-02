@@ -29,7 +29,7 @@ import (
 )
 
 func main() {
-	logging.SetupAppLogger("todo")
+	logging.SetupAppLogger("<my-module>")
 	appLogger := logging.AppLogger
 
     // ... rest of the code
