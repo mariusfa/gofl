@@ -14,3 +14,11 @@ if err != nil {
 ```
 
 An example of the logger impl you can find in the logging package app-log.
+
+
+For local dev use `.env file. Example of file:
+```bash
+# Default app configuration
+SERVER_ENABLED=true # used to enable server config validation. Aka env vars with SERVER_ prefix
+SERVER_PORT=8080
+```
