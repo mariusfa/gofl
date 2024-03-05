@@ -9,7 +9,6 @@ import (
 
 type Config struct {
 	Port    string
-	AppName string
 }
 
 type LoggerInterface interface {
@@ -23,11 +22,10 @@ func GetConfig(logger LoggerInterface, filename string) (*Config, error) {
 	}
 
 	config := &Config{
-		Port:    os.Getenv("PORT"),
-		AppName: os.Getenv("APP_NAME"),
+		Port:    os.Getenv("SERVER_PORT"),
 	}
 
-	err = validateConfig(config)
+	err = validateServerConfig(config)
 	if err != nil {
 		return nil, err
 	}
@@ -35,12 +33,12 @@ func GetConfig(logger LoggerInterface, filename string) (*Config, error) {
 	return config, nil
 }
 
-func validateConfig(config *Config) error {
-	if config.Port == "" {
-		return errors.New("env var PORT is required")
+func validateServerConfig(config *Config) error {
+	if os.Getenv("SERVER_ENABLED") != "true" {
+		return nil
 	}
-	if config.AppName == "" {
-		return errors.New("env var APP_NAME is required")
+	if config.Port == "" {
+		return errors.New("env var SERVER_PORT is required")
 	}
 
 	return nil

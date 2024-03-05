@@ -19,15 +19,12 @@ func TestGetConfig(t *testing.T) {
 	if config.Port != "8080" {
 		t.Errorf("expected port to be 8080, got %v", config.Port)
 	}
-	if config.AppName != "testapp" {
-		t.Errorf("expected app name to be test, got %v", config.AppName)
-	}
 }
 
 func TestGetConfigNoEnvFile(t *testing.T) {
 	fake := &loggerFake{}
-	os.Setenv("PORT", "8080")
-	os.Setenv("APP_NAME", "testapp")
+	os.Setenv("SERVER_ENABLED", "true")
+	os.Setenv("SERVER_PORT", "8080")
 
 	config, err := GetConfig(fake, ".notExists")
 	if err != nil {
@@ -37,15 +34,12 @@ func TestGetConfigNoEnvFile(t *testing.T) {
 	if config.Port != "8080" {
 		t.Errorf("expected port to be 8080, got %v", config.Port)
 	}
-	if config.AppName != "testapp" {
-		t.Errorf("expected app name to be test, got %v", config.AppName)
-	}
 	os.Clearenv()
 }
 
 func TestGetConfigMissingPort(t *testing.T) {
 	fake := &loggerFake{}
-	os.Setenv("APP_NAME", "testapp")
+	os.Setenv("SERVER_ENABLED", "true")
 
 	_, err := GetConfig(fake, ".notExists")
 	if err == nil {
