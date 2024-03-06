@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	Port    string
+	Port string
 }
 
 type LoggerInterface interface {
@@ -22,7 +22,7 @@ func GetConfig(logger LoggerInterface, filename string) (*Config, error) {
 	}
 
 	config := &Config{
-		Port:    os.Getenv("SERVER_PORT"),
+		Port: os.Getenv("SERVER_PORT"),
 	}
 
 	err = validateServerConfig(config)
