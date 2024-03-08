@@ -29,11 +29,15 @@ type CircuitBreaker struct {
 }
 
 type Options struct {
-	FailureThreshold    int
-	RecoveryThreshold   int
+	// Number of failed requests required to set the state to open
+	FailureThreshold int
+	// Number of successful requests required to set the state to closed
+	RecoveryThreshold int
+	// Number of concurrent test requests allowed in half open state
 	TestRequestsAllowed int
-	ResetTimeout        time.Duration
-	//
+	// Timeout for open state after which the state is set to half open
+	ResetTimeout time.Duration
+	// Interval after which the failure count is reset
 	FailureResetInterval time.Duration
 }
 
@@ -94,6 +98,7 @@ func (cb *CircuitBreaker) setToClosed() {
 	cb.testRequestCount = 0
 }
 
+// Execute runs the action and returns an error if the circuit breaker is open
 func (cb *CircuitBreaker) Execute(action func() error) error {
 	cb.mutex.Lock()
 

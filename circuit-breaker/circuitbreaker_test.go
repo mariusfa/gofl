@@ -3,6 +3,7 @@ package circuitbreaker
 import (
 	"errors"
 	"testing"
+	"time"
 )
 
 // Happy path test
@@ -45,5 +46,30 @@ func TestOpenCircuit(t *testing.T) {
 
 	if cb.state != Open {
 		t.Error("state should be open")
+	}
+}
+
+// Test that failure count is reset after the failure reset interval
+func TestFailureCountReset(t *testing.T) {
+	action := func() error {
+		return errors.New("error")
+	}
+
+	cb := NewCircuitBreaker(Options{
+		FailureThreshold:     2,
+		FailureResetInterval: 1 * time.Microsecond,
+	})
+
+	cb.Execute(action)
+	cb.Execute(action)
+	time.Sleep(2 * time.Microsecond) // waits for rest of failure count
+	cb.Execute(action)
+
+	if cb.state != Closed {
+		t.Error("state should be closed")
+	}
+
+	if cb.failureCount != 1 {
+		t.Error("failure count should be 1")
 	}
 }
