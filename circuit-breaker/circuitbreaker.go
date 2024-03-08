@@ -14,6 +14,11 @@ const (
 	HalfOpen
 )
 
+var (
+	ErrorCircuitOpen                    = errors.New("circuit breaker is open")
+	ErrorCircuitHalfOpenAllowedRequests = errors.New("circuit breaker half open test requests exhausted")
+)
+
 type CircuitBreaker struct {
 	state                State
 	mutex                sync.Mutex
@@ -104,13 +109,13 @@ func (cb *CircuitBreaker) Execute(action func() error) error {
 
 	if cb.state == Open {
 		cb.mutex.Unlock()
-		return errors.New("circuit breaker is open")
+		return ErrorCircuitOpen
 	}
 
 	if cb.state == HalfOpen {
 		if cb.testRequestCount >= cb.testRequestsAllowed {
 			cb.mutex.Unlock()
-			return errors.New("circuit breaker half open test requests exhausted")
+			return ErrorCircuitHalfOpenAllowedRequests
 		}
 		cb.testRequestCount++
 	}
@@ -135,7 +140,6 @@ func (cb *CircuitBreaker) Execute(action func() error) error {
 
 	if err != nil {
 		cb.failureCount++
-		println(cb.failureCount)
 		if cb.failureCount >= cb.failureThreshold {
 			cb.setToOpen()
 		}
