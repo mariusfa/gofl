@@ -25,22 +25,22 @@ type CircuitBreaker struct {
 	testRequestCount     int
 	resetTimeout         time.Duration
 	failureResetInterval time.Duration
-	lastFailureTime    time.Time
+	lastFailureTime      time.Time
 }
 
 type Options struct {
-	FailureThreshold    int
-	RecoveryThreshold   int
-	TestRequestsAllowed int
-	ResetTimeout        time.Duration
+	FailureThreshold     int
+	RecoveryThreshold    int
+	TestRequestsAllowed  int
+	ResetTimeout         time.Duration
 	FailureResetInterval time.Duration
 }
 
 const (
-	DefaultFailureThreshold    = 5
-	DefaultRecoveryThreshold   = 3
-	DefaultTestRequestsAllowed = 3
-	DefaultResetTimeout        = 5 * time.Second
+	DefaultFailureThreshold     = 5
+	DefaultRecoveryThreshold    = 3
+	DefaultTestRequestsAllowed  = 3
+	DefaultResetTimeout         = 5 * time.Second
 	DefaultFailureResetInterval = 60 * time.Second
 )
 
@@ -93,7 +93,7 @@ func (cb *CircuitBreaker) setToClosed() {
 
 func (cb *CircuitBreaker) Execute(action func() error) error {
 	cb.mutex.Lock()
-	
+
 	if cb.state == Open {
 		cb.mutex.Unlock()
 		return errors.New("circuit breaker is open")
@@ -112,7 +112,7 @@ func (cb *CircuitBreaker) Execute(action func() error) error {
 	}
 
 	cb.mutex.Unlock()
-	
+
 	err := action()
 
 	cb.mutex.Lock()
