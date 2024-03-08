@@ -25,14 +25,15 @@ type CircuitBreaker struct {
 	testRequestCount     int
 	resetTimeout         time.Duration
 	failureResetInterval time.Duration
-	lastFailureTime      time.Time
+	intervalTimestamp    time.Time
 }
 
 type Options struct {
-	FailureThreshold     int
-	RecoveryThreshold    int
-	TestRequestsAllowed  int
-	ResetTimeout         time.Duration
+	FailureThreshold    int
+	RecoveryThreshold   int
+	TestRequestsAllowed int
+	ResetTimeout        time.Duration
+	//
 	FailureResetInterval time.Duration
 }
 
@@ -62,11 +63,13 @@ func NewCircuitBreaker(opts Options) *CircuitBreaker {
 	}
 
 	return &CircuitBreaker{
-		state:               Closed,
-		failureThreshold:    opts.FailureThreshold,
-		recoveryThreshold:   opts.RecoveryThreshold,
-		testRequestsAllowed: opts.TestRequestsAllowed,
-		resetTimeout:        opts.ResetTimeout,
+		state:                Closed,
+		failureThreshold:     opts.FailureThreshold,
+		recoveryThreshold:    opts.RecoveryThreshold,
+		testRequestsAllowed:  opts.TestRequestsAllowed,
+		resetTimeout:         opts.ResetTimeout,
+		failureResetInterval: opts.FailureResetInterval,
+		intervalTimestamp:    time.Now(),
 	}
 }
 
@@ -107,8 +110,9 @@ func (cb *CircuitBreaker) Execute(action func() error) error {
 		cb.testRequestCount++
 	}
 
-	if time.Since(cb.lastFailureTime) > cb.failureResetInterval && cb.failureCount > 0 {
+	if time.Since(cb.intervalTimestamp) > cb.failureResetInterval && cb.failureCount > 0 {
 		cb.failureCount = 0
+		cb.intervalTimestamp = time.Now()
 	}
 
 	cb.mutex.Unlock()
@@ -119,12 +123,14 @@ func (cb *CircuitBreaker) Execute(action func() error) error {
 	defer cb.mutex.Unlock()
 
 	if err != nil && cb.state == HalfOpen {
+		cb.intervalTimestamp = time.Now()
 		cb.setToOpen()
 		return err
 	}
 
 	if err != nil {
 		cb.failureCount++
+		println(cb.failureCount)
 		if cb.failureCount >= cb.failureThreshold {
 			cb.setToOpen()
 		}
