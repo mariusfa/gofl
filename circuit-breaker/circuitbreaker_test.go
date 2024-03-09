@@ -16,7 +16,11 @@ func TestPerformAction(t *testing.T) {
 	}
 
 	cb := NewCircuitBreaker(Options{})
-	cb.Execute(action)
+	err := cb.Execute(action)
+
+	if err != nil {
+		t.Error("error should be nil")
+	}
 
 	if !actionPerformed {
 		t.Error("action should have been performed")
