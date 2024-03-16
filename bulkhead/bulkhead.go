@@ -7,7 +7,6 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-
 type Options struct {
 	// Maximum number of concurrent requests allowed
 	MaxConcurrent int64
@@ -26,7 +25,7 @@ type Bulkhead struct {
 }
 
 func NewBulkhead(opt Options) *Bulkhead {
-	if (opt.MaxConcurrent == 0) {
+	if opt.MaxConcurrent == 0 {
 		opt.MaxConcurrent = DefaultMaxConcurrent
 	}
 

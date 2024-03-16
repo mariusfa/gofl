@@ -84,12 +84,12 @@ func TestBulkheadFull(t *testing.T) {
 
 	errorCount := 0
 	for _, err := range listOfErrors {
-		if err != nil && err == ErrBulkheadFull{
+		if err != nil && err == ErrBulkheadFull {
 			errorCount++
 		}
 	}
 
 	if errorCount != 1 {
 		t.Errorf("Expected 1, got %v", errorCount)
-	}	
+	}
 }
