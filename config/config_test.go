@@ -7,11 +7,19 @@ import (
 
 type loggerFake struct{}
 
-func (l *loggerFake) Info(string) {}
+func (l *loggerFake) Info(msg string) {
+	println(msg)
+}
 
 func TestGetConfig(t *testing.T) {
 	fake := &loggerFake{}
-	config, err := GetConfig(fake, ".env")
+	type Config struct {
+		Port string
+	}
+
+	var config Config
+
+	err := GetConfig(fake, ".env", &config)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19,14 +27,19 @@ func TestGetConfig(t *testing.T) {
 	if config.Port != "8080" {
 		t.Errorf("expected port to be 8080, got %v", config.Port)
 	}
+	os.Clearenv()
 }
 
 func TestGetConfigNoEnvFile(t *testing.T) {
 	fake := &loggerFake{}
-	os.Setenv("SERVER_ENABLED", "true")
-	os.Setenv("SERVER_PORT", "8080")
+	os.Setenv("PORT", "8080")
+	type Config struct {
+		Port string
+	}
 
-	config, err := GetConfig(fake, ".notExists")
+	var config Config
+
+	err := GetConfig(fake, ".notExists", &config)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -39,9 +52,13 @@ func TestGetConfigNoEnvFile(t *testing.T) {
 
 func TestGetConfigMissingPort(t *testing.T) {
 	fake := &loggerFake{}
-	os.Setenv("SERVER_ENABLED", "true")
+	type Config struct {
+		Port string
+	}
 
-	_, err := GetConfig(fake, ".notExists")
+	var config Config
+
+	err := GetConfig(fake, ".notExists", &config)
 	if err == nil {
 		t.Errorf("expected an error, got nil")
 	}
