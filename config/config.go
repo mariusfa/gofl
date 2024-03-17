@@ -32,9 +32,12 @@ func GetConfig(logger LoggerInterface, filename string, config any) error {
 		fieldName := fieldInfo.Name
 		envName := getEnvName(fieldName)
 		envValue := os.Getenv(envName)
-		if envValue == "" {
+		requiredTag := fieldInfo.Tag.Get("required")
+
+		if envValue == "" && requiredTag != "false" {
 			return errors.New("env var " + envName + " is required")
 		}
+
 		v.Field(i).SetString(envValue)
 	}
 	return nil
@@ -53,33 +56,3 @@ func getEnvName(fieldName string) string {
 	envName = strings.ToUpper(envName)
 	return envName
 }
-
-// Old GetConfig to be deleted
-// func GetConfig(logger LoggerInterface, filename string) (*Config, error) {
-// 	err := godotenv.Load(filename)
-// 	if err != nil {
-// 		logger.Info("Could not load .env file. Using ENV variables")
-// 	}
-
-// 	config := &Config{
-// 		Port: os.Getenv("SERVER_PORT"),
-// 	}
-
-// 	err = validateServerConfig(config)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return config, nil
-// }
-
-// func validateServerConfig(config *Config) error {
-// 	if os.Getenv("SERVER_ENABLED") != "true" {
-// 		return nil
-// 	}
-// 	if config.Port == "" {
-// 		return errors.New("env var SERVER_PORT is required")
-// 	}
-
-// 	return nil
-// }

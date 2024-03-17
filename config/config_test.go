@@ -64,3 +64,22 @@ func TestGetConfigMissingPort(t *testing.T) {
 	}
 	os.Clearenv()
 }
+
+func TestGetConfigWhenOptional(t *testing.T) {
+	fake := &loggerFake{}
+	type Config struct {
+		Port string `required:"false"`
+	}
+
+	var config Config
+
+	err := GetConfig(fake, ".notExists", &config)
+	if err != nil {
+		t.Errorf("expected no error, got %v", err)
+	}
+
+	if config.Port != "" {
+		t.Errorf("expected port to be empty, got %v", config.Port)
+	}
+	os.Clearenv()
+}
