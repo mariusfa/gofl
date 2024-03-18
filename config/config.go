@@ -9,21 +9,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Example of config to be sent into GetConfig
-// type Config struct {
-// 	ServerEnabled string `required`
-// 	ServerPort string `required ServerEnabled`
-// }
 
-type LoggerInterface interface {
-	Info(string)
-}
-
-func GetConfig(logger LoggerInterface, filename string, config any) error {
-	err := godotenv.Load(filename)
-	if err != nil {
-		logger.Info("Could not load .env file. Using ENV variables")
-	}
+func GetConfig(filename string, config any) error {
+	godotenv.Load(filename) // ignore error. if file does not exist, it's ok
 
 	v := reflect.ValueOf(config).Elem()
 
