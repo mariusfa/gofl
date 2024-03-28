@@ -9,6 +9,7 @@ Go framework library
     - [app-log](./logging/app-log/README.md)
     - [transaction-log](./logging/transaction-log/README.md)
 - [circuit-breaker](./circuit-breaker/README.md)
+- [database](./database/README.md)
 
 
 ## Install 
