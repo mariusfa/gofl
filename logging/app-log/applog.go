@@ -12,9 +12,9 @@ type AppLogger struct {
 	appName string
 }
 
-func NewAppLogger(appName string) *AppLogger {
+func NewAppLogger(appName string) AppLogger {
 	log.SetFlags(0)
-	return &AppLogger{appName: appName}
+	return AppLogger{appName: appName}
 }
 
 func (al *AppLogger) Info(payload string) {
