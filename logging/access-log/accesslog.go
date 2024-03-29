@@ -12,8 +12,8 @@ type AccessLogger struct {
 	appName string
 }
 
-func NewAppLogger(appName string) *AccessLogger {
-	return &AccessLogger{appName: appName}
+func NewAccessLogger(appName string) AccessLogger {
+	return AccessLogger{appName: appName}
 }
 
 func (al *AccessLogger) Info(durationMs int, status int, requestPath string, requestMethod string) {
