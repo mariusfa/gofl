@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+var TransLog TransLogger
+
 type TransLogger struct {
 	appName string
 }
