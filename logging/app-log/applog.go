@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+var AppLog AppLogger
+
 type AppLogger struct {
 	appName string
 }
