@@ -5,32 +5,13 @@ This is a package for general logging.
 ## Usage
 
 Here is an example of how to use this package.
-Start with creating a package in `internal/logging` and add a file `logging.go` with the following content:
+Init logger in main to be used everywhere in the app.
+
 ```go
-package logging
+// In main function
+appName := "todo"
+applog.AppLog = applog.NewAppLogger(appName)
 
-import applog "github.com/mariusfa/gofl/v2/logging/app-log"
-
-var AppLogger *applog.AppLogger
-
-func SetupAppLogger(appName string) {
-	AppLogger = applog.NewAppLogger(appName)
-}
+// Used elsewhere in the app
+applog.AppLog.Info("This is an info message")
 ```
-
-In the main.go file, you can use the logger like this:
-```go
-package main
-
-import (
-	"<my-module>/internal/logging"
-
-	"github.com/mariusfa/gofl/v2/config"
-)
-
-func main() {
-	logging.SetupAppLogger("<my-module>")
-	appLogger := logging.AppLogger
-
-    // ... rest of the code
-}
