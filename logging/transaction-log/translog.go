@@ -12,9 +12,9 @@ type TransLogger struct {
 	appName string
 }
 
-func NewTransLogger(appName string) *TransLogger {
+func NewTransLogger(appName string) TransLogger {
 	log.SetFlags(0)
-	return &TransLogger{appName: appName}
+	return TransLogger{appName: appName}
 }
 
 func (al *TransLogger) Info(payload string, requestMethod string, event string, status string, durationMs string) {
