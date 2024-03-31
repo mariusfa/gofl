@@ -9,7 +9,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
 func GetConfig(filename string, config any) error {
 	godotenv.Load(filename) // ignore error. if file does not exist, it's ok
 

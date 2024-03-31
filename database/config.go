@@ -24,14 +24,14 @@ func NewDbConfig(
 	startupLocal string,
 ) *DbConfig {
 	return &DbConfig{
-		Host: 	   host,
-		Name: 	   name,
-		Port: 	   port,
-		User: 	   user,
-		Password: password,
-		AppUser:   appUser,
-		AppPassword: appPassword,
-		RunBaseLine: runBaseLine,
+		Host:         host,
+		Name:         name,
+		Port:         port,
+		User:         user,
+		Password:     password,
+		AppUser:      appUser,
+		AppPassword:  appPassword,
+		RunBaseLine:  runBaseLine,
 		StartupLocal: startupLocal,
 	}
 }

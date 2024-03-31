@@ -35,4 +35,3 @@ func AccessMiddleware(next http.Handler) http.Handler {
 		accesslog.AccessLog.Info(durationMs, crw.status, requestPath, requestMethod)
 	})
 }
-

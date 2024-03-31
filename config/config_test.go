@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-
 func TestGetConfig(t *testing.T) {
 	type Config struct {
 		Port string
